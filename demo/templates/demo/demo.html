@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {%  verbatim %}
+    <div ng-app="PubSubDemo" ng-controller="DemoCtrl as demo">
+        <div class="page-header">
+            <h1>PubSub Demo <small>by Noel</small></h1>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Demo Instructions</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            In this demo, we're using <a href="https://cloud.google.com/pubsub/docs/overview">Google PubSub</a>.
+                            Try pushing some data first. Then, you should be able to pull those data back.
+                        </p>
+                        <p>In a real use-case, PubSub is commonly used for inter-application communication.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Push</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>Use this form to <strong>push data to a Google PubSub topic</strong>.</p>
+                        <p>
+                            This form pushes data to Google PubSub.
+                            These data will then be available for other applications to pull.
+                            You can use the "Pull" panel below to pull messages.
+                        </p>
+                        <form ng-submit="demo.push(demo.data)">
+                            <div class="form-group">
+                                <label for="pushInput">Data</label>
+                                <input type="text" class="form-control" id="pushInput" placeholder="Data" ng-model="demo.data" ng-disabled="demo.pushing">
+                            </div>
+                            <button type="submit" class="btn btn-primary" ng-disabled="demo.pushing">
+                                <i ng-class="demo.pushing ? 'fa fa-spinner fa-spin' : 'fa fa-cloud-upload'"></i> Push
+                            </button>
+                        </form>
+                        <p></p>
+                        <p>Pushed messages:</p>
+                        <ol>
+                            <li ng-repeat="msg in demo.pushes track by $index">{{ msg }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pull</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>Use this button to <strong>pull data from a Google PubSub subscription for the above Google PubSub topic.</strong>.</p>
+                        <p>Pulled messages:</p>
+                        <ol>
+                            <li ng-repeat="msg in demo.pulls track by $index">{{ msg }}</li>
+                        </ol>
+                        <button class="btn btn-success" ng-click="demo.pull()" ng-disabled="demo.pulling">
+                            <i ng-class="demo.pulling ? 'fa fa-spinner fa-spin' : 'fa fa-cloud-download'"></i> Pull
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="{% static 'demo/demo.js' %}"></script>
+{% endblock %}
