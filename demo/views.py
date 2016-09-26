@@ -1,5 +1,4 @@
 import json
-import logging
 
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -8,8 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 
 from .utils import PubSubClient
-
-logger = logging.getLogger(__name__)
 
 
 class DemoView(TemplateView):
