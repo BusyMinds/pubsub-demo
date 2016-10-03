@@ -131,11 +131,14 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': '/tmp/django.log',
         },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
             'propagate': True,
         },
     },

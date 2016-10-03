@@ -20,6 +20,7 @@ from demo.views import DemoView, APIView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', APIView.as_view()),
+    url(r'^api/$', APIView.as_view()),
+    url(r'^api/(?P<pk>[\w_]+)/$', APIView.as_view()),
     url(r'', DemoView.as_view()),
 ]

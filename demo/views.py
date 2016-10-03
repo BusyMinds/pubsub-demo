@@ -1,6 +1,7 @@
 import json
 
-from django.http import JsonResponse
+from django.http import Http404
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -17,21 +18,33 @@ class DemoView(TemplateView):
 @method_decorator(csrf_exempt, name='dispatch')
 class APIView(View):
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, pk, *args, **kwargs):
 
         pubsub = PubSubClient()
 
-        return JsonResponse({
-            'message': pubsub.pull()
-        })
+        try:
+            data = pubsub.pull(pk)
+        except Http404:
+            return JsonResponse({
+                'error': 'No more data to pull.'
+            }, status=404)
+
+        return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
         pubsub = PubSubClient()
 
-        msg = json.loads(request.body.decode('utf-8'))['data']
+        payload = json.loads(request.body.decode('utf-8'))
 
-        pubsub.push(msg)
+        if payload.get('mailing_id') and payload.get('name'):
+            pubsub.push(**payload)
 
-        return JsonResponse({
-            'message': 'Success',
-        })
+            return JsonResponse({
+                'message': 'Success',
+                'payload': payload,
+            })
+
+        else:
+            return JsonResponse({
+                'error': 'The fields "mailing_id" and "name" are required.'
+            }, status=400)
