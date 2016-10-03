@@ -7,6 +7,7 @@ logger = logging.getLogger('django')
 
 PROJECT_IDENTIFIER = 'medxm'
 
+
 class PubSubClient:
 
     def __init__(self):
